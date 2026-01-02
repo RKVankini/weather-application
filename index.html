@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta name="description"
+    content="RK Weather Dashboard – A modern weather application showing real-time weather, maps, and globe visualization." />
+  <meta name="author" content="Rama Krishna Vankini" />
+
+  <title id="dynamic">Weather Dashboard | Rama Krishna</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Work+Sans:wght@100..900&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/jpg" href="./assets/weather-icon.png" />
+  <link rel="icon" href="assets/favicon.ico">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+  <link rel="stylesheet" href="./assets/css/theme.css">
+  <link rel="stylesheet" href="./assets/css/globe-styles.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    crossorigin="anonymous" />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin="" />
+</head>
+
+<body id="body">
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar top-nav">
+    <div class="logo d-flex align-items-center gap-2">
+      <img src="./assets/icons/logo.png" alt="Logo" class="img-fluid logo-img">
+      <span class="logo-title">RK Weather Dashboard</span>
+    </div>
+
+    <div class="nav-controls">
+
+      <!-- Theme Toggle -->
+      <div class="control theme-control">
+        <div class="theme-toggle-wrapper">
+          <button id="theme-toggle" class="theme-toggle-btn"
+            aria-label="Toggle dark/light mode"
+            role="switch"
+            aria-pressed="false">
+            <div class="theme-indicator"></div>
+          </button>
+          <div class="theme-toggle-label">Light</div>
+        </div>
+      </div>
+
+      <!-- Temperature Unit -->
+      <div class="control unit-control">
+        <div class="nav-component__celcius-block col-auto">
+          <input type="checkbox" id="unit" class="checkbox" checked>
+          <label for="unit" class="label" title="Toggle temperature unit">
+            <span class="farenheit">°F</span>
+            <span class="celcius">°C</span>
+            <div class="ball"></div>
+          </label>
+          <div class="unit-toggle-label">°C</div>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <div id="background"></div>
+
+  <!-- ===================== DATE & TIME ===================== -->
+  <h2 class="header-component">
+    <div id="date-time-container">
+      <span id="date-time"></span>
+      <span id="date-time2"></span>
+    </div>
+  </h2>
+
+  <!-- ===================== WEATHER SEARCH ===================== -->
+  <section class="pt-4 card-grid">
+    <div class="container">
+      <div class="weather-component d-flex flex-column align-items-center">
+
+        <div class="weather-component__card text-white rounded-5 p-4">
+
+          <div class="weather-component__search d-flex">
+            <input type="text"
+              class="weather-component__search-bar"
+              placeholder="Search city (e.g., Hyderabad)"
+              list="place" />
+
+            <datalist id="place"></datalist>
+
+            <button class="weather-component__button" aria-label="Search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+            <button class="weather-component__button-microphone"
+              id="microphone-button"
+              title="Voice search">
+              <i class="fa-solid fa-microphone"></i>
+            </button>
+          </div>
+
+          <div id="error-message" class="error-message" hidden></div>
+
+          <!-- ===================== MAP ===================== -->
+          <div class="map-box mt-4">
+            <div class="map-city-label" id="map-city-label"></div>
+            <div id="weather-map"></div>
+          </div>
+
+          <!-- ===================== WEATHER DATA ===================== -->
+          <div id="weather" class="weather-component__data loading">
+
+            <h1 id="city" class="fw-bold">---</h1>
+            <h2 id="temp" class="display-1 fw-bold">--°C</h2>
+
+            <figure class="weather-component__icn">
+              <i id="icon" class="fas fa-cloud fa-3x"></i>
+              <figcaption id="description">---</figcaption>
+            </figure>
+
+            <div class="weather-component__grid">
+
+              <div class="grid-item">
+                <h6>Humidity</h6>
+                <span id="humidity">--%</span>
+              </div>
+
+              <div class="grid-item">
+                <h6>Wind Speed</h6>
+                <span id="wind">-- km/h</span>
+              </div>
+
+              <div class="grid-item">
+                <h6>UV Index</h6>
+                <span id="uvi">--</span>
+              </div>
+
+              <div class="grid-item">
+                <h6>Air Quality</h6>
+                <span id="AirQuality">--</span>
+              </div>
+
+              <div class="grid-item">
+                <h6>Sunrise</h6>
+                <span id="sunrise">--</span>
+              </div>
+
+              <div class="grid-item">
+                <h6>Sunset</h6>
+                <span id="sunset">--</span>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="last-updated" id="last-updated"></div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 3D WEATHER GLOBE ===================== -->
+  <section class="globe-section pt-4">
+    <div class="container">
+      <div class="globe-card text-white rounded-5">
+        <h3 class="text-center mb-3">🌍 Interactive 3D Weather Globe</h3>
+        <div id="globeViz"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="text-center mt-5">
+
+    <h2 class="textfooter">
+      Built & Customized by Rama Krishna Vankini
+    </h2>
+
+    <p style="font-size: 12px; opacity: 0.7;">
+      Inspired by open-source weather projects and enhanced with custom UI & features.
+    </p>
+
+  </footer>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script type="module" src="./assets/js/script.js"></script>
+
+</body>
+</html>
