@@ -1,15 +1,15 @@
 // ==================================================
 // Theme Manager – RK Weather App
-// Handles Light / Dark mode with persistence
+// Light / Dark mode with persistence
 // ==================================================
 
 (function () {
   const STORAGE_KEY = "rk-weather-theme";
-  const toggleBtn = document.getElementById("theme-toggle");
   const root = document.documentElement;
+  const toggleBtn = document.getElementById("theme-toggle");
 
   /* -----------------------------------------------
-     GET THEME
+     GET STORED THEME
   ------------------------------------------------ */
   function getStoredTheme() {
     try {
@@ -17,13 +17,6 @@
     } catch {
       return null;
     }
-  }
-
-  function getSystemTheme() {
-    return window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
   }
 
   /* -----------------------------------------------
@@ -36,17 +29,17 @@
       localStorage.setItem(STORAGE_KEY, theme);
     } catch {}
 
-    updateToggle(theme);
+    updateToggleUI(theme);
   }
 
   /* -----------------------------------------------
-     TOGGLE UI
+     UPDATE TOGGLE UI
   ------------------------------------------------ */
-  function updateToggle(theme) {
+  function updateToggleUI(theme) {
     if (!toggleBtn) return;
 
-    toggleBtn.setAttribute("data-theme", theme);
     toggleBtn.setAttribute("aria-pressed", theme === "dark");
+    toggleBtn.setAttribute("data-theme", theme);
   }
 
   /* -----------------------------------------------
@@ -62,8 +55,9 @@
      INIT
   ------------------------------------------------ */
   function init() {
+    // ✅ Light mode is default
     const savedTheme = getStoredTheme();
-    const initialTheme = savedTheme || getSystemTheme();
+    const initialTheme = savedTheme || "light";
 
     applyTheme(initialTheme);
 
