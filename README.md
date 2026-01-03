@@ -38,3 +38,52 @@ https://rkvankini.github.io/weather-application/
 
 ## 📁 Project Structure (High Level)
 
+weather-application/
+├── assets/
+│ ├── css/
+│ ├── compiled-css/
+│ ├── icons/
+│ └── images/
+├── fonts/
+│ └── icomoon/
+├── js/
+│ ├── env.js
+│ ├── script.js
+│ ├── themeManager.js
+│ └── security.js
+├── config/
+│ └── config.js
+├── index.html
+└── README.md
+
+
+---
+
+## 🔐 Configuration
+
+This is a **client-side application**.
+
+API configuration is handled via `env.js`:
+
+```js
+
+window.ENV = {
+  OPEN_WEATHER_API_KEY: "YOUR_API_KEY"
+};
+
+Note: API keys in frontend apps are visible by design.
+
+🛠️ Design Decisions
+Removed unused backend, build, and SCSS tooling
+
+No bundler or framework — runs directly in the browser
+
+Optimized for GitHub Pages deployment
+
+Focused on maintainability and clarity
+
+📌 Future Enhancements (Planned)
+Multi-language support (i18n)
+Extended forecast
+Air quality data
+UI enhancements
