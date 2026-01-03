@@ -1,11 +1,13 @@
-// ==========================================
-// City list for Weather App autocomplete
-// Curated by: Rama Krishna Vankini
-// Purpose: Quick city search (not exhaustive)
-// ==========================================
+/**
+ * City List for Weather App
+ * Optimized for Autocomplete & Search
+ * Maintained by: RK
+ */
 
-const CITY = [
-  // 🇮🇳 Major Indian Cities
+const RAW_CITIES = [
+  /* =========================
+     🇮🇳 INDIA
+  ========================== */
   "Hyderabad",
   "Bengaluru",
   "Chennai",
@@ -39,16 +41,18 @@ const CITY = [
   "Salem",
   "Erode",
   "Kochi",
-  "Trivandrum",
+  "Thiruvananthapuram",
   "Thrissur",
-  "Calicut",
+  "Kozhikode",
 
-  // 🌍 International Cities
+  /* =========================
+     🌍 INTERNATIONAL
+  ========================== */
   "New York",
   "Los Angeles",
   "Chicago",
   "San Francisco",
-  "Washington",
+  "Washington, D.C.",
   "Toronto",
   "Vancouver",
   "London",
@@ -88,4 +92,62 @@ const CITY = [
   "Mexico City"
 ];
 
-export default CITY;
+/* --------------------------------------------------
+   NORMALIZATION
+-------------------------------------------------- */
+
+const normalize = (value = "") =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+
+/* --------------------------------------------------
+   DATA STRUCTURES
+-------------------------------------------------- */
+
+// Remove duplicates safely
+const UNIQUE_CITIES = [...new Set(RAW_CITIES)];
+
+// Normalized index for fast search
+const CITY_INDEX = UNIQUE_CITIES.map(city => ({
+  original: city,
+  normalized: normalize(city)
+}));
+
+/* --------------------------------------------------
+   PUBLIC HELPERS
+-------------------------------------------------- */
+
+/**
+ * Search cities for autocomplete
+ * @param {string} query
+ * @param {number} limit
+ */
+export function searchCities(query = "", limit = 10) {
+  if (!query) return UNIQUE_CITIES.slice(0, limit);
+
+  const q = normalize(query);
+
+  return CITY_INDEX
+    .filter(city => city.normalized.includes(q))
+    .slice(0, limit)
+    .map(city => city.original);
+}
+
+/**
+ * Validate city exists in our dataset
+ */
+export function isKnownCity(cityName) {
+  return CITY_INDEX.some(
+    city => city.normalized === normalize(cityName)
+  );
+}
+
+/**
+ * Get full city list (read-only)
+ */
+export const CityList = Object.freeze(UNIQUE_CITIES);
+
+export default CityList;

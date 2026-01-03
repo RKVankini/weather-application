@@ -1,3 +1,6 @@
 {
-  "liveServer.settings.port": 5502
+  "liveServer.settings.port": 5500,
+  "liveServer.settings.wait": 500,
+  "liveServer.settings.root": "/",
+  "editor.formatOnSave": true
 }

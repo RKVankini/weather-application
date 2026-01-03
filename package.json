@@ -1,20 +1,31 @@
 {
   "name": "rk-weather-dashboard",
   "version": "1.0.0",
-  "description": "RK Weather Dashboard – A modern frontend weather application built using HTML, CSS, JavaScript, and OpenWeather API.",
+  "description": "An interactive weather dashboard with real-time weather, air quality, maps, dark mode, and global visualization.",
   "private": true,
   "scripts": {
     "dev": "gulp sync",
+    "watch": "gulp watch",
     "build": "gulp css",
-    "watch": "gulp watch"
+    "css": "gulp css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RKVankini/weather-application.git"
   },
   "author": "Rama Krishna Vankini",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RKVankini/weather-application/issues"
+  },
+  "homepage": "https://rkvankini.github.io/weather-application/",
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-cli": "^2.3.0",
     "gulp-sass": "^5.1.0",
-    "sass": "^1.69.3",
+    "sass": "^1.69.3"
+  },
+  "dependencies": {
     "browser-sync": "^2.29.3"
   }
 }

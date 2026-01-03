@@ -1,25 +1,62 @@
-// Input sanitization utilities
-export const sanitizeInput = (input) => {
-  if (typeof input !== 'string') return '';
-  return input
-    .replace(/[<>\"'&]/g, (match) => {
-      const map = { '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', '&': '&amp;' };
-      return map[match];
-    })
-    .trim()
-    .slice(0, 100); // Limit length
-};
+// ==================================================
+// Security Utilities – RK Weather App
+// Author: Rama Krishna Vankini
+// Purpose: Basic client-side input safety & validation
+// NOTE: This is NOT a security guarantee (client-side)
+// ==================================================
 
-export const validateCityName = (city) => {
-  const cityRegex = /^[a-zA-Z\s\-']{1,50}$/;
-  return cityRegex.test(city);
-};
+window.Security = (() => {
+  /* -----------------------------------------------
+     SANITIZE USER INPUT
+     - Prevent XSS via input field
+     - Trim length
+  ------------------------------------------------ */
+  function sanitizeInput(input) {
+    if (typeof input !== "string") return "";
 
-export const isValidUrl = (url) => {
-  try {
-    const urlObj = new URL(url);
-    return urlObj.protocol === 'https:';
-  } catch {
-    return false;
+    return input
+      .replace(/[<>\"'&]/g, (char) => {
+        const map = {
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#x27;",
+          "&": "&amp;"
+        };
+        return map[char];
+      })
+      .trim()
+      .slice(0, 60); // limit city length
   }
-};
+
+  /* -----------------------------------------------
+     VALIDATE CITY NAME
+     - Letters, spaces, hyphens only
+  ------------------------------------------------ */
+  function isValidCity(city) {
+    if (!city) return false;
+    const regex = /^[a-zA-Z\s\-']{2,50}$/;
+    return regex.test(city);
+  }
+
+  /* -----------------------------------------------
+     SAFE URL CHECK (used for icons / backgrounds)
+  ------------------------------------------------ */
+  function isSecureUrl(url) {
+    try {
+      const parsed = new URL(url);
+      return parsed.protocol === "https:";
+    } catch {
+      return false;
+    }
+  }
+
+  /* -----------------------------------------------
+     PUBLIC API
+  ------------------------------------------------ */
+  return {
+    sanitizeInput,
+    isValidCity,
+    isSecureUrl
+  };
+})();

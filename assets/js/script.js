@@ -1,62 +1,85 @@
-// ==========================================
-// RK Weather Application – Main Script
+// ==================================================
+// Weather Application – Main Script (RK Version)
 // Author: Rama Krishna Vankini
-// ==========================================
+// ==================================================
 
-import config from "../../config/config.js";
+/* --------------------------------------------------
+   ENV CONFIG (from env.js)
+-------------------------------------------------- */
+const {
+  WEATHER_API_KEY,
+  WEATHER_API_BASE_URL,
+  WEATHER_ICON_URL
+} = window.ENV;
 
-// -------------------- DOM ELEMENTS --------------------
+/* --------------------------------------------------
+   DOM ELEMENTS
+-------------------------------------------------- */
 const searchInput = document.querySelector(".weather-component__search-bar");
-const searchButton = document.querySelector(
-  ".weather-component__search button"
-);
+const searchBtn = document.querySelector(".weather-component__button");
+const micBtn = document.querySelector(".weather-component__button-microphone");
+
 const cityEl = document.getElementById("city");
 const tempEl = document.getElementById("temp");
 const descEl = document.getElementById("description");
+
 const humidityEl = document.getElementById("humidity");
 const windEl = document.getElementById("wind");
 const sunriseEl = document.getElementById("sunrise");
 const sunsetEl = document.getElementById("sunset");
+
+const weatherIconImg = document.querySelector(".weather-component__icn img");
 const errorEl = document.getElementById("error-message");
 
-// -------------------- STATE --------------------
+/* --------------------------------------------------
+   STATE
+-------------------------------------------------- */
 let isCelsius = true;
-let selectedCity = "Hyderabad";
+let currentCity = "Hyderabad";
 
-// -------------------- HELPERS --------------------
-function showError(message) {
+/* --------------------------------------------------
+   UTILITIES
+-------------------------------------------------- */
+function showError(message = "") {
   if (!errorEl) return;
   errorEl.textContent = message;
-  errorEl.hidden = !message;
+  errorEl.style.display = message ? "block" : "none";
 }
 
 function formatTime(unix) {
   return new Date(unix * 1000).toLocaleTimeString("en-IN", {
     hour: "2-digit",
-    minute: "2-digit",
+    minute: "2-digit"
   });
 }
 
-function convertTemp(temp) {
-  if (isCelsius) return `${Math.round(temp)}°C`;
-  return `${Math.round((temp * 9) / 5 + 32)}°F`;
+function convertTemp(tempC) {
+  if (isCelsius) return `${Math.round(tempC)}°C`;
+  return `${Math.round((tempC * 9) / 5 + 32)}°F`;
 }
 
-// -------------------- WEATHER LOGIC --------------------
+/* --------------------------------------------------
+   API CALL
+-------------------------------------------------- */
 async function fetchWeather(city) {
-  showError("");
-  try {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
-    city
-    )}&units=metric&appid=${config.API_KEY}`;
+  showError();
 
+  if (!WEATHER_API_KEY) {
+    showError("Missing API key");
+    return;
+  }
+
+  try {
+    const url = `${WEATHER_API_BASE_URL}/weather?q=${encodeURIComponent(
+      city
+    )}&units=metric&appid=${WEATHER_API_KEY}`;
 
     const res = await fetch(url);
 
     if (!res.ok) {
       if (res.status === 404) throw new Error("City not found");
       if (res.status === 401) throw new Error("Invalid API key");
-      throw new Error("Failed to fetch weather");
+      throw new Error("Unable to fetch weather data");
     }
 
     const data = await res.json();
@@ -66,6 +89,9 @@ async function fetchWeather(city) {
   }
 }
 
+/* --------------------------------------------------
+   RENDER WEATHER
+-------------------------------------------------- */
 function renderWeather(data) {
   const { name } = data;
   const { temp, humidity } = data.main;
@@ -76,71 +102,57 @@ function renderWeather(data) {
   cityEl.textContent = name;
   tempEl.textContent = convertTemp(temp);
   descEl.textContent = description;
+
   humidityEl.textContent = `${humidity}%`;
-  windEl.textContent = `${speed} km/h`;
+  windEl.textContent = `${speed} m/s`;
   sunriseEl.textContent = formatTime(sunrise);
   sunsetEl.textContent = formatTime(sunset);
 
-  document.getElementById("icon").className = `fas ${mapIcon(icon)} fa-3x`;
+  weatherIconImg.src = `${WEATHER_ICON_URL}/${icon}@2x.png`;
+  weatherIconImg.alt = description;
 }
 
-// -------------------- ICON MAPPING --------------------
-function mapIcon(code) {
-  const icons = {
-    "01d": "fa-sun",
-    "01n": "fa-moon",
-    "02d": "fa-cloud-sun",
-    "02n": "fa-cloud-moon",
-    "03d": "fa-cloud",
-    "03n": "fa-cloud",
-    "04d": "fa-cloud",
-    "04n": "fa-cloud",
-    "09d": "fa-cloud-showers-heavy",
-    "09n": "fa-cloud-showers-heavy",
-    "10d": "fa-cloud-sun-rain",
-    "10n": "fa-cloud-moon-rain",
-    "11d": "fa-bolt",
-    "11n": "fa-bolt",
-    "13d": "fa-snowflake",
-    "13n": "fa-snowflake",
-    "50d": "fa-smog",
-    "50n": "fa-smog",
-  };
-  return icons[code] || "fa-cloud";
-}
-
-// -------------------- EVENTS --------------------
-searchButton.addEventListener("click", () => {
-  if (!searchInput.value.trim()) {
+/* --------------------------------------------------
+   EVENTS
+-------------------------------------------------- */
+searchBtn.addEventListener("click", () => {
+  const value = searchInput.value.trim();
+  if (!value) {
     showError("Please enter a city name");
     return;
   }
-  selectedCity = searchInput.value.trim();
-  fetchWeather(selectedCity);
+  currentCity = value;
+  fetchWeather(currentCity);
 });
 
-searchInput.addEventListener("keyup", (e) => {
-  if (e.key === "Enter") searchButton.click();
+searchInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") searchBtn.click();
 });
 
-// Temperature toggle
-document.querySelector(".checkbox")?.addEventListener("change", function () {
-  isCelsius = !this.checked;
-  fetchWeather(selectedCity);
+/* Unit Toggle (°C / °F) */
+document.querySelector(".checkbox")?.addEventListener("change", (e) => {
+  isCelsius = !e.target.checked;
+  fetchWeather(currentCity);
 });
 
-// -------------------- DEFAULT LOAD --------------------
+/* --------------------------------------------------
+   BACKGROUND IMAGE
+-------------------------------------------------- */
+const background = document.getElementById("background");
+
+function setBackground() {
+  if (!background) return;
+
+  const size = window.innerWidth < 768 ? "720x1280" : "1600x900";
+  background.style.backgroundImage = `url(https://source.unsplash.com/${size}/?weather,nature)`;
+}
+
+setBackground();
+
+/* --------------------------------------------------
+   INIT
+-------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
-  fetchWeather(selectedCity);
+  fetchWeather(currentCity);
   searchInput.focus();
 });
-
-// -------------------- BACKGROUND (UNSPLASH ONLY) --------------------
-const background = document.getElementById("background");
-function setBackground() {
-  const url = `https://source.unsplash.com/${
-    window.innerWidth < 768 ? "720x1280" : "1600x900"
-  }/?weather,nature`;
-  background.style.backgroundImage = `url(${url})`;
-}
-setBackground();

@@ -1,17 +1,62 @@
-### 🛠️ Fixes Issue
+## 🔧 Related Issue
 
-<!-- If your PR fixes an open issue, use `Closes #101` to link your PR with the issue -->
-<!-- Here, #101 stands for the issue number you are fixing -->
-<!-- Example: Closes #31 -->
+<!--
+Link the issue this PR addresses.
+Use: Closes #<issue-number>
+Example: Closes #12
+-->
 
-### ➕ Changes Introduced
+---
 
-<!-- List all the changes introduced in your PR -->
+## ✨ Summary of Changes
 
-### 📄 Note To Reviewers
+<!--
+Provide a clear and concise summary of what this PR does.
+Bullet points are recommended.
+-->
 
-<!-- Add notes to reviewers if applicable -->
+- 
+- 
+- 
 
-### 📷 Screenshots
+---
 
-<!-- Add screenshots if applicable -->
+## 🧪 How Has This Been Tested?
+
+<!--
+Describe how you tested your changes:
+- Manual testing
+- Browser(s) used
+- Edge cases considered
+-->
+
+- [ ] Manual testing
+- [ ] Cross-browser testing
+- [ ] No tests required
+
+---
+
+## 📸 Screenshots / Recordings (if applicable)
+
+<!--
+Attach screenshots or screen recordings to help reviewers understand UI changes.
+-->
+
+---
+
+## ✅ Checklist
+
+Please ensure the following before requesting review:
+
+- [ ] My code follows the project’s coding standards
+- [ ] I have tested my changes locally
+- [ ] I have updated documentation where required
+- [ ] My changes do not introduce new warnings or errors
+
+---
+
+## 📝 Additional Notes for Reviewers
+
+<!--
+Add any extra context, considerations, or follow-up tasks here.
+-->
