@@ -11,7 +11,7 @@
 
 (function () {
   const ENV = {
-    WEATHER_API_KEY: "b659c45c2dee2a80251107f91a8a160c",
+    WEATHER_API_KEY: "ce5da48750bae4b8d0260846bc54bdf4",
     WEATHER_API_BASE_URL: "https://api.openweathermap.org/data/2.5",
     WEATHER_ICON_URL: "https://openweathermap.org/img/wn"
   };
