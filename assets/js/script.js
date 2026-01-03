@@ -47,8 +47,9 @@ async function fetchWeather(city) {
   showError("");
   try {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
-      city
+    city
     )}&units=metric&appid=${config.API_KEY}`;
+
 
     const res = await fetch(url);
 
